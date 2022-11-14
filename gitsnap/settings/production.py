@@ -1,0 +1,1 @@
+from gitsnap.settings.base import *

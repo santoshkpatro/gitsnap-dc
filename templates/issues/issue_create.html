@@ -1,0 +1,33 @@
+{% extends 'repo_base.html' %}
+
+{% load static %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+            <form action="{% url 'issue-create-view' username=username name=name %}" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" required name="title">
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea name="description" id="description" cols="30" rows="10"></textarea>
+                </div>
+                <button type="submit" class="btn btn-dark">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock body %}
+
+{% block script %}
+<script src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+<script>
+  tinymce.init({
+    selector: 'textarea'
+  });
+</script>
+{% endblock script %}

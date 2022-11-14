@@ -1,0 +1,63 @@
+{% extends 'repo_base.html' %} 
+
+{% load humanize %}
+
+{% block body %}
+<ul class="container list-group">
+    <div class="d-flex justify-content-between mb-3">
+      <div class="d-flex">
+        <div class="dropdown">
+          <button
+            class="btn btn-sm btn-secondary dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            {{ branch }}
+          </button>
+          <ul class="dropdown-menu">
+            {% for b in branches %}
+                <li>
+                    <a class="dropdown-item" href="{% url 'tree-view' username=username name=name branch=b path='' %}">
+                        {% if b == branch %}
+                            <i class="bi bi-check"></i> {{ b }}
+                        {% else %}
+                            {{ b }}
+                        {% endif %}
+                    </a>
+                </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div>
+          <i class="bi bi-sliders me-2 ms-3"></i>{{ total_branch }}
+          <span class="fw-light">branches</span>
+        </div>
+      </div>
+    </div>
+    <li class="list-group-item">
+        <div class="d-flex justify-content-between">
+            <div>
+                <span class="fw-bold">{{ last_commit.author }}</span> <a href="" class="h-link">{{ last_commit.message }}</a>
+            </div>
+            <div>
+                <span class="fw-light">{{ last_commit.committed_date|naturaltime }}</span>   
+                <a href="{% url 'commit-list-view' username=username name=name branch=project.default_branch %}" class="ms-3 h-link">
+                    <i class="bi bi-clock-history"></i> {{ commit_count }} <span class="fw-light">commits</span>
+                </a>
+            </div>
+        </div>
+    </li>
+    {% for content in contents %}
+    <li class="list-group-item">
+      {% if content.type == 'folder' %}
+      <i class="bi bi-folder"></i>
+        <a href="{% url 'tree-view' username=username name=name branch=branch path=path %}/{{ content.name }}/" class="h-link">{{ content.name }}</a> 
+      {% else %}
+      <i class="bi bi-files"></i> 
+        <a href="{% url 'blob-view' username=username name=name branch=branch path=path %}/{{ content.name }}" class="h-link">{{ content.name }}</a> 
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

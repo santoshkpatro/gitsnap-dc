@@ -1,0 +1,39 @@
+{% extends 'repo_base.html' %} 
+
+{% load humanize %}
+
+{% block body %}
+<div class="container">
+  <div class="dropdown mb-3">
+    <button
+      class="btn btn-sm btn-secondary dropdown-toggle"
+      type="button"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
+      {{ branch }}
+    </button>
+    <ul class="dropdown-menu">
+      {% for b in branches %}
+          <li>
+              <a class="dropdown-item" href="{% url 'commit-list-view' username=username name=name branch=b %}">
+                  {% if b == branch %}
+                      <i class="bi bi-check"></i> {{ b }}
+                  {% else %}
+                      {{ b }}
+                  {% endif %}
+              </a>
+          </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <ul class="list-group">
+    {% for commit in commits %}
+    <li class="list-group-item">
+        <a href="" class="h-link"><p>{{ commit.message }}</p></a>
+        <div class="form-text">{{ commit.author }} committed {{ commit.committed_date|naturaltime }}</div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock body %}

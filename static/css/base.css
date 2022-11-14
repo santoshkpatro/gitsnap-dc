@@ -1,0 +1,17 @@
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.h-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.h-link:hover {
+    text-decoration: underline;
+}
+
+.nav-item > .nav-link {
+    text-decoration: none;
+    color: inherit;
+}

@@ -1,0 +1,41 @@
+<div class="container-fluid mt-3">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <i class="bi bi-postcard-fill me-2"></i>
+      <li class="breadcrumb-item"><a href="#" >{{ username }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ name }}</li>
+    </ol>
+  </nav>
+</div>
+
+<div class="mb-4">
+  <ul class="nav border-bottom border-1">
+    <li class="nav-item">
+      <a
+        class="nav-link {% if tab == 'code' %}border-bottom border-3 border-dark{% endif %}"
+        href="{% url 'project-detail-view' username=username name=name %}"
+        ><i class="bi bi-code-slash me-2"></i> Code</a
+      >
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link {% if tab == 'commits' %}border-bottom border-3 border-dark{% endif %}"
+        href="{% url 'commit-list-view' username=username name=name branch=project.default_branch %}"
+        ><i class="bi bi-clock-history"></i> Commits</a
+      >
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link {% if tab == 'issues' %}border-bottom border-3 border-dark{% endif %}"
+        href="{% url 'issue-list-view' username=username name=name %}"
+        ><i class="bi bi-exclamation-triangle me-2"></i>Issues</a
+      >
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#"><i class="bi bi-sign-merge-left me-2"></i>Merge Requests</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"><i class="bi bi-people me-2"></i>Collaborators</a>
+    </li>
+  </ul>
+</div>

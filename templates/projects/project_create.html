@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container col-5 mt-5">
+    <h1>Create a Project</h1>
+    <hr>
+    <form action="{% url 'project-create-view' username=username %}" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Project Name</label>
+            <div class="input-group">
+                <span class="input-group-text">{{ username }} /</span>
+                <input type="text" class="form-control" name="name" required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Description <span class="fw-light">(Optional)</span></label>
+            <input type="text" class="form-control" name="description">
+        </div>
+        <div class="d-grid gap-2">
+            <button class="btn btn-dark" type="submit">Create Project</button>
+        </div>
+    </form>
+</div>
+{% endblock body %}

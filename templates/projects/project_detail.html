@@ -1,0 +1,122 @@
+{% extends 'repo_base.html' %} {% load humanize %} {% block body %}
+<div class="container">
+  <div class="row">
+    <div class="col-9 mb-2">
+      <ul class="list-group">
+        <div class="d-flex justify-content-between mb-3">
+          <div class="d-flex">
+            <div class="dropdown">
+              <button
+                class="btn btn-sm btn-secondary dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {{ project.default_branch }}
+              </button>
+              <ul class="dropdown-menu">
+                {% for branch in branches %}
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'tree-view' username=username name=name branch=branch path='' %}"
+                  >
+                    {% if project.default_branch == branch %}
+                    <i class="bi bi-check"></i> {{ branch }} 
+                    {% else %} 
+                    {{ branch }} 
+                    {% endif %}
+                  </a>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div>
+              <i class="bi bi-sliders me-2 ms-3"></i>{{ total_branch }}
+              <span class="fw-light">branches</span>
+            </div>
+          </div>
+          <div>
+            <div class="dropdown">
+              <button
+                class="btn btn-sm btn-secondary dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                data-bs-auto-close="outside"
+              >
+                Code
+              </button>
+              <div class="dropdown-menu p-2">
+                <p>Clone</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <li class="list-group-item">
+          <div class="d-flex justify-content-between">
+            <div>
+              <span class="fw-bold">{{ last_commit.author }}</span>
+              <a href="" class="h-link"
+                >{{ last_commit.message|truncatechars:40 }}</a
+              >
+            </div>
+            <div>
+              <span class="fw-light"
+                >{{ last_commit.committed_date|naturaltime }}</span
+              >
+              <a
+                href="{% url 'commit-list-view' username=username name=name branch=project.default_branch %}"
+                class="ms-3 h-link"
+              >
+                <i class="bi bi-clock-history"></i> {{ commit_count }}
+                <span class="fw-light">commits</span>
+              </a>
+            </div>
+          </div>
+        </li>
+        {% for content in contents %}
+        <li class="list-group-item">
+          {% if content.type == 'folder' %}
+          <i class="bi bi-folder"></i>
+          <a
+            href="{% url 'tree-view' username=username name=name branch=project.default_branch path=content.name %}"
+            class="h-link"
+            >{{ content.name }}</a
+          >
+          {% else %}
+          <i class="bi bi-files"></i> 
+          <a href="{% url 'blob-view' username=username name=name branch=project.default_branch path=content.name %}" class="h-link">{{ content.name }}</a> 
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+
+      <div class="card mt-3">
+        <div class="card-body" id="readme">
+          <p>No Readme Present</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-3">
+      <h5>About</h5>
+      <p>{{ project.description }}</p>
+    </div>
+  </div>
+</div>
+{% endblock body %}
+
+{% block script %}
+  <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
+  <script>
+    showdown.setFlavor('github');
+    var converter = new showdown.Converter({
+      emoji: true
+    })
+    // converter.setFlavor('github');
+
+    text = '{{ readme_content }}',
+    html = converter.makeHtml(text);
+
+    document.getElementById('readme').innerHTML = html
+  </script>
+{% endblock %}

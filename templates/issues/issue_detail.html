@@ -1,0 +1,66 @@
+{% extends 'repo_base.html' %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% block body %}
+<div class="container mb-5">
+  <div>
+    <h2>{{ issue.title }} <span class="form-text">#{{ issue.number }}<span></h2>
+    <p class="">
+        {% if issue.state == 'open' %}
+        <span class="badge rounded-pill text-bg-dark">Open</span>
+        {% else %}
+        <span class="badge rounded-pill text-bg-secondary">Closed</span>
+        {% endif %}
+      {{ issue.author.username }} <span class="form-text"> opened this issue {{ issue.created_at|naturaltime }} </span>
+    </p>
+    <p>{{ issue.description|safe }}</p>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col-8">
+      {% for comment in comments %}
+      <div class="card my-4">
+        <div class="list-group">
+          <li class="list-group-item bg-light">{{ comment.author.username }} <span class="form-text"> commented {{ comment.created_at|naturaltime }} </span></li>
+        </div>
+        <div class="card-body">
+          <div>{{ comment.body|safe }}</div>
+        </div>
+      </div>
+      {% endfor %}
+
+      {% if request.user.is_authenticated and issue.project.owner == request.user %}
+      <form action="{% url 'issue-comment-create-view' username=username name=name number=number %}" method="post">
+        {% csrf_token %}
+        <textarea name="body" cols="30" rows="10"></textarea>
+        <div class="d-flex justify-content-end mt-2">
+          <div>
+            {% if issue.state == 'open' %}
+            <a href="close/" class="btn btn-secondary">Close</a>
+            {% else %}
+            <a href="open/" class="btn btn-secondary">Re-Open</a>
+            {% endif %}
+            <button class="btn btn-dark" type="submit">Comment</button>
+          </div>
+        </div>
+      </form>
+      {% else %}
+      <p class="text-danger">Please sign in to comment</p>
+      {% endif %}
+    </div>
+    <div class="col-4"></div>
+  </div>
+</div>
+{% endblock body %}
+
+{% block script %}
+<script src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+<script>
+  tinymce.init({
+    selector: 'textarea'
+  });
+</script>
+{% endblock script %}

@@ -1,0 +1,38 @@
+{% extends 'repo_base.html' %}
+
+{% load humanize %}
+
+{% block body %}
+<div class="container">
+  <div class="d-flex flex-row-reverse mb-2">
+    <a href="{% url 'issue-create-view' username=username name=name %}" class="btn btn-dark btn-sm">Create</a>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <i class="bi bi-signpost"></i
+      ><a href="?state=open" class="h-link mx-2">{{ open_issues_count }} Open</a
+      ><a href="?state=closed" class="h-link mx-2">{{ closed_issues_count }} Closed</a>
+    </li>
+
+    {% for issue in issues %}
+    <li class="list-group-item">
+      <a
+        href="{% url 'issue-detail-view' username=username name=name number=issue.number %}"
+        class="h-link"
+        ><p>
+          {% if issue.state == 'open' %}
+          <i class="bi bi-plugin"></i>
+          {% else %}
+          <i class="bi bi-disc"></i>
+          {% endif %}
+          {{ issue.title }}
+        </p>
+      </a>
+      <div class="form-text">
+        #{{ issue.number }} opened {{ issue.created_at|naturaltime }} by {{ issue.author.username }}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock body %}
