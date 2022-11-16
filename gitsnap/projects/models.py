@@ -42,6 +42,10 @@ class Project(BaseModel):
         repo = Repo(self.get_repo_url())
         return repo
 
+    def check_empty_repo(self):
+        repo = Repo(self.get_repo_url())
+        return repo.active_branch.is_valid()
+
     def get_branches(self):
         repo = self.get_repo()
         branches = []

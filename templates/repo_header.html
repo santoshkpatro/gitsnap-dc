@@ -3,7 +3,13 @@
     <ol class="breadcrumb">
       <i class="bi bi-postcard-fill me-2"></i>
       <li class="breadcrumb-item"><a href="#" >{{ username }}</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{ name }}</li>
+      <li class="breadcrumb-item active" aria-current="page">{{ name }}
+        {% if project.is_private %}
+        <span class="badge bg-secondary">private</span>
+        {% else %}
+        <span class="badge bg-secondary">public</span>
+        {% endif %}
+      </li>
     </ol>
   </nav>
 </div>
@@ -36,6 +42,9 @@
     </li>
     <li class="nav-item">
       <a class="nav-link"><i class="bi bi-people me-2"></i>Collaborators</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"><i class="bi bi-gear me-2"></i>Settings</a>
     </li>
   </ul>
 </div>

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse
 from django.views import View
 
@@ -26,6 +26,9 @@ class CommitListView(View):
 
     def get(self, request, username, name, branch):
         project: Project = self.get_project(username, name)
+
+        if not project.check_empty_repo():
+            return redirect('project-detail-view', username=username, name=name)
 
         if not self.has_project_permission(request.user, project):
             raise Http404

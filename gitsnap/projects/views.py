@@ -65,6 +65,15 @@ class ProjectDetailView(View):
         if not self.has_project_permission(request.user, project):
             raise Http404
 
+        if not project.check_empty_repo():
+            context = {
+                'project': project,
+                'username': username,
+                'name': project.name,
+                'tab': 'code',
+            }
+            return render(request, 'projects/project_setup_guide.html', context)
+
         branches = project.get_branches()
         root_tree = project.get_project_tree()
 

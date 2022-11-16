@@ -42,6 +42,7 @@ class BlobView(View):
         content = blob.data_stream.read().decode()
         size = blob.size
         file_name = blob.name
+        branches = project.get_branches()
 
         context = {
             'username': username,
@@ -53,7 +54,9 @@ class BlobView(View):
             'content': content,
             'path': path,
             'size': size,
-            'file_name': file_name
+            'file_name': file_name,
+            'branches': branches,
+            'total_branch': len(branches)
         }
 
         return render(request, 'blob/blob.html', context)

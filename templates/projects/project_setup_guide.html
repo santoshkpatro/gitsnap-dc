@@ -1,0 +1,64 @@
+{% extends 'repo_base.html' %}
+
+{% load humanize %}
+
+{% block body %}
+<div class="container">
+  <ul class="list-group">
+    <li class="list-group-item">
+      <div id="quick-setup">
+        <h5>Quick setup — if you’ve done this kind of thing before</h5>
+        <div class="input-group input-group-sm mt-2">
+          <span class="input-group-text">SSH | HTTPS</span>
+          <input id="path" class="form-control" value="{{ project.path.path }}">
+          <span class="input-group-text">
+            <button class="btn clipboard" data-clipboard-target="#path">
+              <i class="bi bi-clipboard"></i>
+            </button>
+          </span>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <p>…or create a new repository on the command line</p>
+      <div id="new-repo">
+        <code>
+          echo "# sudo" >> README.md
+          <br>
+          git init
+          <br>
+          git add README.md
+          <br>
+          git commit -m "first commit"
+          <br>
+          git branch -M main
+          <br>
+          git remote add origin {{ project.path.path }}
+          <br>
+          git push -u origin main
+        </code>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <p>…or push an existing repository from the command line</p>
+      <div id="exiting-repo">
+        <code>
+          git remote add origin {{ project.path.path }}
+          <br>
+          git branch -M main
+          <br>
+          git push -u origin main
+        </code>
+      </div>
+    </li>
+  </ul>
+</div>
+{% endblock body %}
+
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+<script>
+  new ClipboardJS('.clipboard');
+</script>
+{% endblock %}
