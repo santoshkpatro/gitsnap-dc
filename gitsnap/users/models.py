@@ -21,7 +21,7 @@ class User(BaseModel, AbstractBaseUser):
     )
     email = models.EmailField(blank=True)
     full_name = models.CharField(verbose_name="full name", max_length=200)
-    avatar = models.ImageField(upload_to='avatars')
+    avatar = models.ImageField(upload_to="avatars")
     bio = models.TextField(blank=True, null=True)
 
     password_reset_required = models.BooleanField(default=False)
@@ -29,15 +29,17 @@ class User(BaseModel, AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(verbose_name="date joined", default=timezone.now)
-    last_login_ip = models.GenericIPAddressField(verbose_name="last login ip", blank=True, null=True)
+    last_login_ip = models.GenericIPAddressField(
+        verbose_name="last login ip", blank=True, null=True
+    )
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'full_name']
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["email", "full_name"]
 
     objects = UserManager()
 
     class Meta:
-        db_table = 'users'
+        db_table = "users"
 
     def __str__(self) -> str:
         return self.username
@@ -51,4 +53,3 @@ class User(BaseModel, AbstractBaseUser):
         "Does the user have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
-

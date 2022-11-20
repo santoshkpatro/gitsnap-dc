@@ -9,25 +9,65 @@
   </div>
   <ul class="list-group">
     <li class="list-group-item">
-      <i class="bi bi-signpost"></i
-      ><a href="?state=open" class="h-link mx-2">{{ open_issues_count }} Open</a
-      ><a href="?state=closed" class="h-link mx-2">{{ closed_issues_count }} Closed</a>
+      <div class="d-flex flex-row justify-content-between">
+        <div>
+          <i class="bi bi-signpost"></i><a href="?state=open" class="h-link mx-2">{{ open_issues_count }} Open</a><a
+            href="?state=closed" class="h-link mx-2">{{ closed_issues_count }} Closed</a>
+        </div>
+        <div class="dropdown">
+          <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Tags
+          </button>
+          <form action="" method="get" class="dropdown-menu px-2">
+            {% for tag in available_tags %}
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="{{ tag.name }}" id="defaultCheck1" name="tags">
+              <label class="form-check-label" for="defaultCheck1">
+                {{ tag.name }}
+              </label>
+            </div>
+            {% endfor %}
+            <div class="d-grid gap-2">
+              <button class="btn btn-sm btn-dark" type="submit">Apply</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      {% if added_tags %}
+      <form action="" method="get" id="tag-form">
+        {% for tag in added_tags %}
+        <span><a href="#" onclick="apply_tags('tag-{{ forloop.counter }}')"><i class="bi bi-x-circle"></i></a>
+          {{ tag}}
+        </span>
+        <input type="hidden" id="tag-{{ forloop.counter }}" value="{{ tag }}" name="tags">
+        {% endfor %}
+
+        <button id="apply_tags" type="submit" hidden>Apply</button>
+      </form>
+      {% endif %}
     </li>
 
     {% for issue in issues %}
     <li class="list-group-item">
-      <a
-        href="{% url 'issue-detail-view' username=username name=name number=issue.number %}"
-        class="h-link"
-        ><p>
-          {% if issue.state == 'open' %}
-          <i class="bi bi-plugin"></i>
-          {% else %}
-          <i class="bi bi-disc"></i>
-          {% endif %}
-          {{ issue.title }}
-        </p>
-      </a>
+      <div class="d-flex flex-row">
+        <a href="{% url 'issue-detail-view' username=username name=name number=issue.number %}" class="h-link">
+          <p>
+            {% if issue.state == 'open' %}
+            <i class="bi bi-plugin"></i>
+            {% else %}
+            <i class="bi bi-disc"></i>
+            {% endif %}
+            {{ issue.title }}
+          </p>
+        </a>
+        {% for tag in issue.issue_tags.all %}
+        <a href="?tags={{ tag.name }}" class="h-link">
+          <p class="badge bg-secondary mx-1">{{ tag.name }}</p>
+        </a>
+        {% endfor %}
+      </div>
+
       <div class="form-text">
         #{{ issue.number }} opened {{ issue.created_at|naturaltime }} by {{ issue.author.username }}
       </div>
@@ -36,3 +76,14 @@
   </ul>
 </div>
 {% endblock body %}
+
+{% block script %}
+<script>
+  function apply_tags(tagId) {
+    const form = document.getElementById('tag-form')
+    const element = document.getElementById(tagId)
+    element.remove()
+    form.submit()
+  }
+</script>
+{% endblock %}

@@ -4,6 +4,7 @@ from django.views import View
 
 from gitsnap.projects.models import Project
 from gitsnap.users.models import User
+from gitsnap.issues.models import Issue
 
 
 class CommitListView(View):
@@ -18,7 +19,7 @@ class CommitListView(View):
     def has_project_permission(self, user: User, project: Project):
         if not project.is_private:
             return True
-        
+
         if project.owner == user:
             return True
 
@@ -28,7 +29,7 @@ class CommitListView(View):
         project: Project = self.get_project(username, name)
 
         if not project.check_empty_repo():
-            return redirect('project-detail-view', username=username, name=name)
+            return redirect("project-detail-view", username=username, name=name)
 
         if not self.has_project_permission(request.user, project):
             raise Http404
@@ -37,13 +38,13 @@ class CommitListView(View):
         branches = project.get_branches()
 
         context = {
-            'username': username,
-            'name': name,
-            'tab': 'commits',
-            'project': project,
-            'commits': commits,
-            'branch': branch,
-            'branches': branches
+            "username": username,
+            "name": name,
+            "tab": "commits",
+            "project": project,
+            "commits": commits,
+            "branch": branch,
+            "branches": branches,
         }
 
-        return render(request, 'commits/commit_list.html', context)
+        return render(request, "commits/commit_list.html", context)
